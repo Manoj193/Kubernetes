@@ -303,3 +303,47 @@ Cluster-level logging refers to a system within a Kubernetes cluster that manage
 --------------------->Explanation: To enhance usability, the cluster-level logging system typically includes a search and browsing interface. This interface allows users to interactively search, filter, and browse through the stored logs, making it easier to locate specific information, identify trends, and troubleshoot issues.
 In summary, cluster-level logging is a critical component in Kubernetes that centralizes the collection and storage of container logs. By saving logs to a centralized store and offering a user-friendly search and browsing interface, this mechanism streamlines log management, simplifies troubleshooting, and provides a comprehensive solution for monitoring the health and performance of applications within the Kubernetes cluster.
 ************************************************************************End of Cluster Level Logging***********************************************************************
+######################################################### Comminication between Nodes and the Control Plane ###############################################################
+Communication between nodes and the control plane in a Kubernetes cluster is crucial for the proper functioning of the system. The document outlines the communication paths and security considerations, allowing users to customize network configurations for enhanced security, particularly when running on untrusted networks or fully public IPs in a cloud provider.
+1.Node to Control Plane:
+1.1.Hub-and-Spoke API Pattern:
+--------------------->Explanation: Kubernetes follows a "hub-and-spoke" API pattern, where all API usage from nodes or the pods they run terminates at the API server. Other control plane components do not expose remote services.
+1.2.Secure API Server Configuration:
+---------------------->Explanation: The API server is configured to listen for remote connections on a secure HTTPS port (typically 443) with client authentication enabled. Authorization mechanisms, especially when allowing anonymous requests or service account tokens, should be implemented.
+1.3.Node Provisioning:
+---------------------->Explanation: Nodes should be provisioned with the public root certificate for the cluster, enabling them to connect securely to the API server with valid client credentials.
+1.4.Pods Accessing API Server:
+---------------------->Explanation: Pods can securely connect to the API server using a service account, allowing Kubernetes to automatically inject the public root certificate and a valid bearer token into the pod.
+2.Control Plane to Node:
+2.1.API Server to Kubelet:
+--------------------->Explanation: API server communicates with the kubelet for tasks like fetching logs, attaching to running pods, and providing port-forwarding. The connection is secured by verifying the kubelet's serving certificate using the --kubelet-certificate-authority flag.
+2.2.API Server to Nodes, Pods, and Services:
+--------------------->Explanation: Default connections from the API server to nodes, pods, and services are plain HTTP, neither authenticated nor encrypted. While they can be run over HTTPS, the certificate is not validated, and client credentials are not provided. Not currently safe for untrusted or public networks.
+3.Secure Communication Alternatives:
+3.1.SSH Tunnels:
+------------->Explanation: Kubernetes supports SSH tunnels for control plane to nodes communication. The API server initiates an SSH tunnel to each node, securing traffic. Note: SSH tunnels are deprecated.
+4.Konnectivity Service (Beta Feature in Kubernetes v1.18):
+----------------------->Explanation: A replacement for SSH tunnels, Konnectivity provides a TCP-level proxy for control plane to cluster communication. It includes Konnectivity server in the control plane network and Konnectivity agents in the nodes network. The agents initiate connections to the server, securing control plane to nodes traffic.
+In summary, securing communication between nodes and the control plane involves configuring secure connections, verifying certificates, and considering alternatives like SSH tunnels (deprecated) or the Konnectivity service for enhanced security in Kubernetes clusters.
+*************************************************************************End of Communication between Nodes and Control plane********************************************
+######################################################## Container ################################################################################################
+Containers provide a consistent and repeatable environment for running applications. By encapsulating both the application code and its dependencies, containers ensure that the behavior remains the same regardless of where they are executed.
+
+A key advantage of containers is the decoupling of applications from the underlying host infrastructure. This decoupling makes deployment more straightforward across various environments, such as different cloud providers or operating systems. The standardization achieved through including dependencies ensures that the containerized application behaves consistently, promoting reliability and predictability.
+
+In the context of a Kubernetes cluster, each node (physical or virtual machine) runs containers that collectively form Pods, the basic deployable units. These containers within a Pod are not only co-located, meaning they share the same node, but they are also co-scheduled, ensuring they run together on that node. This approach optimizes resource utilization and enhances the efficiency of managing and scaling applications within the Kubernetes ecosystem.
+*****************************************************End of Container************************************************************************************************
+###################################################################### Container Image ##############################################################################
+A container image is like a self-contained software package that comes fully equipped to run an application seamlessly. It includes everything necessary for the application: the actual code, any runtime components it depends on, essential application and system libraries, and predefined settings.
+
+The philosophy behind containers is to maintain a stateless and immutable nature. This means once a container is up and running, you shouldn't alter its code directly. If you need to make changes to a containerized application, the recommended approach is to create a new container image that incorporates the desired modifications. Subsequently, you recreate the container, starting fresh from the updated image. This practice ensures consistency, reproducibility, and an efficient way to manage and deploy applications, aligning with the principles of containerization.
+******************************************************************************End of Container Image*******************************************************************
+################################################################### Container Runtimes ##############################################################################
+A container runtime is a critical component that enables Kubernetes to efficiently manage the execution and lifecycle of containers in its environment. Essentially, it oversees how containers are run within the Kubernetes ecosystem, handling their processes from start to finish.
+
+In Kubernetes, there's flexibility in choosing container runtimes. Examples include containerd, CRI-O, and any other implementation adhering to the Kubernetes Container Runtime Interface (CRI). This variety allows for customization based on specific needs or preferences.
+
+Typically, the cluster can automatically select the default container runtime for a Pod. However, if your cluster involves multiple container runtimes, you have the option to specify a RuntimeClass for a Pod. This ensures that Kubernetes runs those containers using a particular container runtime, providing control over the underlying execution environment.
+
+Moreover, the RuntimeClass feature isn't limited to choosing different runtimes. It can also be used to run various Pods with the same container runtime but different settings. This flexibility empowers users to tailor their containerized workloads to specific runtime requirements, enhancing the versatility and efficiency of Kubernetes deployments.
+************************************************************************* End of Container Runtimes **********************************************************************
