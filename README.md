@@ -9,7 +9,4 @@
 8. Storage
 9. Configuration
 10. Security
-11. Policies
-12. Scheduling
-13. Preemption and Eviction
-14. Cluster Administration
+11. Scheduling
