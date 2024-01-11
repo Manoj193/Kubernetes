@@ -2,6 +2,8 @@
 1. What is Docker?
 2. How it’s useful for Kubernetes?
 3. Commands to install the docker in a Kubernetes Cluster.
+
+
 **Kubernetes Topics:---**
 1.Overview of Kubernetes
 2.Cluster Architecture
@@ -14,6 +16,11 @@
 9.Configuration
 10.Security
 11.Scheduling
+
+
+
+
+
 **Installation of Kubernetes CLI Topics:----**
 12.Kubernetes Cluster Deployment.
 13.Deploying a POD.
