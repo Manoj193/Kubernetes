@@ -59,8 +59,8 @@ Key Benefits of Using Docker with Kubernetes:
 
 In summary:
 Docker acts as the foundation for packaging and distributing applications, ensuring consistency. Kubernetes then takes over, automating deployment tasks and enhancing scalability, reliability, and resource efficiency. Together, Docker and Kubernetes form a robust solution for building, deploying, and managing modern, cloud-native applications.
-****************************************************************** End of How docker is usefull for Kubernetes ***************************************************************
-##############################################################Commands to Install the docker in a kubernetes cluster##########################################################
+************************************************************** End of How docker is usefull for Kubernetes **************************************************************
+########################################################Commands to Install the docker in a kubernetes cluster##########################################################
 To install Docker on a Kubernetes cluster, you generally don't install Docker directly on each cluster node, as Kubernetes abstracts away the container runtime. Instead, you install a container runtime that Kubernetes supports, such as Docker, Containerd, or CRI-O, and then configure Kubernetes to use that runtime. Below are general steps for installing Docker on a node in a Kubernetes cluster:
 
 1.Update Package Repositories:
